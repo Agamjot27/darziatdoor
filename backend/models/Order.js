@@ -9,22 +9,56 @@ const orderSchema = new mongoose.Schema({
     tailorId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Tailor",
-        required: true
+
     },
     serviceType: {
         type: String,
-        enum: ["stitching", "alteration"],
+        enum: ["stitching", "alteration", "bespoke"],
+        required: true,
+        lowercase: true,
+        trim: true
+    },
+    garmentType: {
+        type: String,
         required: true
     },
     date: {
         type: Date,
         required: true,
     },
+    measurements: {
+        chest: { type: Number },
+        waist: { type: Number },
+        inseam: { type: Number },
+        shoulders: { type: Number }
+    },
+    fabricProfile: {
+        type: String
+    },
     status: {
         type: String,
-        enum: ["pending", "accepted", "in_progress", "completed"],
+        enum: ["pending", "accepted", "in_progress", "completed", "rejected"],
         default: "pending",
     },
+    jobType: {
+        type: String,
+        enum: ["standard", "express"],
+        default: "standard"
+    },
+    jobLocation: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            default: 'Point'
+        },
+        coordinates: {
+            type: [Number],
+            default: [0, 0]
+        }
+    },
+    price: {
+        type: Number
+    }
 },
     { timestamps: true }
 );

@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+:root {
+  /* The Digital Atelier Palette */
+  --primary: #051125;
+  --secondary: #2b6954;
+  --tertiary: #190f00;
+  --accent: #e9c176;
+  
+  --surface: #fcf9f3;
+  --surface-container-low: #f6f3ed;
+  --surface-container-high: #ebe8e2;
+  --surface-container-highest: #e5e2dc;
+  --surface-container-lowest: #ffffff;
+  
+  --on-surface: #1c1c18;
+  --on-surface-variant: #45474d;
+  --outline-variant: rgba(197, 198, 205, 0.2);
+  
+  /* Tyography Tokens */
+  --font-headline: 'Noto Serif', serif;
+  --font-body: 'Manrope', sans-serif;
+  
+  /* Elevation Tokens */
+  --shadow-ambient: 0 24px 40px rgba(28, 28, 24, 0.04);
+  --shadow-deep: 0 32px 64px rgba(5, 17, 37, 0.08);
+
+  /* Spacing */
+  --spacing-16: 5.5rem;
+  --spacing-20: 7rem;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--surface);
+  color: var(--on-surface);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* --- Global Elements & Typography --- */
+h1, h2, h3, h4, .serif {
+  font-family: var(--font-headline);
+  letter-spacing: -0.02em;
+}
+
+p, span, div, .sans {
+  font-family: var(--font-body);
+}
+
+/* --- Glassmorphism --- */
+.glass {
+  background: rgba(252, 249, 243, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* --- The Editorial Layout Utils --- */
+.container-editorial {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 4rem;
+}
+
+.asymmetric-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+/* --- Components: Fasteners (Buttons) --- */
+.btn-fastener {
+  padding: 1.25rem 2.5rem;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 10px 30px rgba(5, 17, 37, 0.1);
+}
+
+.btn-primary:hover {
+  transform: translateY(-4px) scale(1.02);
+  background-color: #1b263b;
+  box-shadow: 0 20px 40px rgba(5, 17, 37, 0.15);
+}
+
+.btn-secondary {
+  background-color: var(--secondary);
+  color: #ffffff;
+}
+
+.btn-accent {
+  background-color: var(--accent);
+  color: var(--tertiary);
+}
+
+/* --- Tonal Layering --- */
+.surface-stack-1 { background-color: var(--surface-container-low); }
+.surface-stack-2 { background-color: var(--surface-container-high); }
+.surface-stack-3 { background-color: var(--surface-container-lowest); }
+
+/* --- Specific Page Overrides --- */
+.dashboard-container {
+  min-height: 100vh;
+  padding-top: var(--spacing-16);
+  background-color: var(--surface);
+}
+
+.measure-chip {
+  display: inline-flex;
+  align-items: center;
+  background-color: #adedd3;
+  color: var(--secondary);
+  padding: 0.5rem 1.25rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* --- Form Elements --- */
+.input-atelier {
+  width: 100%;
+  border: none;
+  background-color: var(--surface-container-low);
+  padding: 1.25rem;
+  font-family: var(--font-body);
+  border-radius: 0.4rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  color: var(--on-surface);
+}
+
+.input-atelier:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--outline-variant);
+  background-color: var(--surface-container-lowest);
+}
+
+/* --- Animations --- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* No-Line Rule: Hidden structure through background shifts */
+.section-boundary {
+  padding-top: var(--spacing-20);
+  padding-bottom: var(--spacing-20);
+}
