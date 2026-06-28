@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import API from '../api/api';
 import toast from 'react-hot-toast';
+import LiveTrackingMap from '../components/LiveTrackingMap';
 
 const OrderTracking = () => {
     const { id } = useParams();
@@ -33,10 +34,10 @@ const OrderTracking = () => {
     if (!order) return null;
 
     const stages = [
-        { key: "pending", label: "Commission Received", icon: "✉️" },
-        { key: "accepted", label: "Artisan Assigned", icon: "📐" },
-        { key: "in_progress", label: "In Production", icon: "🪡" },
-        { key: "completed", label: "Ready for Fitting", icon: "✨" }
+        { key: "pending", label: "Commission Received", icon: "âœ‰ï¸" },
+        { key: "accepted", label: "Artisan Assigned", icon: "ðŸ“" },
+        { key: "in_progress", label: "In Production", icon: "ðŸª¡" },
+        { key: "completed", label: "Ready for Fitting", icon: "âœ¨" }
     ];
     
     let currentStageIndex = stages.findIndex(s => s.key === order.status);
@@ -47,7 +48,7 @@ const OrderTracking = () => {
             {/* Minimal Header */}
             <header className="px-12 py-8 flex justify-between items-center bg-white/30 backdrop-blur-md sticky top-0 z-50 border-b border-[#051125]/5">
                 <button onClick={() => navigate('/dashboard')} className="text-[10px] font-bold tracking-[0.2em] uppercase opacity-40 hover:opacity-100 transition-all flex items-center gap-2">
-                    <span>←</span> Return to Workspace
+                    <span>â†</span> Return to Workspace
                 </button>
                 <div className="text-[10px] font-bold tracking-[0.4em] uppercase opacity-40">Concierge Tracking</div>
             </header>
@@ -62,7 +63,7 @@ const OrderTracking = () => {
                                 The journey of your <br/><span className="not-italic font-bold">bespoke item.</span>
                             </h1>
                             <p className="text-sm text-[#45474d] leading-relaxed">
-                                Ref: #{order._id.slice(-8).toUpperCase()}
+                                Ref: #{String(order._id || order.id).slice(-8).toUpperCase()}
                             </p>
                         </div>
 
@@ -92,9 +93,10 @@ const OrderTracking = () => {
 
                     {/* Details Side */}
                     <div className="lg:col-span-8 space-y-8">
+                        <LiveTrackingMap orders={[order]} loading={false} />
                         {order.status === "rejected" ? (
                             <div className="p-12 bg-red-50 rounded-2xl border border-red-100 text-center space-y-4">
-                                <span className="text-4xl">⚠️</span>
+                                <span className="text-4xl">âš ï¸</span>
                                 <h3 className="text-2xl font-serif text-red-900">Commission Terminated</h3>
                                 <p className="text-sm text-red-700 opacity-80 max-w-sm mx-auto">
                                     Our artisans are unable to fulfill this specific request at this time. Please contact the concierge for redirection.
@@ -168,3 +170,6 @@ const OrderTracking = () => {
 };
 
 export default OrderTracking;
+
+
+

@@ -1,0 +1,198 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  user
+  tailor
+  admin
+}
+
+enum OrderStatus {
+  pending
+  accepted
+  in_progress
+  completed
+  rejected
+  cancelled
+}
+
+enum ReadymadeOrderStatus {
+  placed
+  confirmed
+  packed
+  out_for_delivery
+  delivered
+  cancelled
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(user)
+  latitude  Float    @default(0.0)
+  longitude Float    @default(0.0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tailorProfile   Tailor?
+  orders          Order[]
+  reviews         Review[]
+  messages        Message[]
+  measurements    Measurement[]
+  cart            Cart?
+  readymadeOrders ReadymadeOrder[]
+}
+
+model Tailor {
+  id            Int      @id @default(autoincrement())
+  userId        Int      @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skills        String[]
+  bio           String?
+  priceRangeMin Int?
+  priceRangeMax Int?
+  profilePhoto  String?
+  experience    Float?
+  availability  Boolean  @default(true)
+  latitude      Float    @default(0.0)
+  longitude     Float    @default(0.0)
+  isOnline      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  orders          Order[]
+  reviews         Review[]
+  products        Product[]
+  carts           Cart[]
+  readymadeOrders ReadymadeOrder[]
+}
+
+model Order {
+  id              Int         @id @default(autoincrement())
+  userId          Int
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tailorId        Int?
+  tailor          Tailor?     @relation(fields: [tailorId], references: [id], onDelete: SetNull)
+  serviceType     String
+  garmentType     String
+  date            DateTime
+  measurements    Json
+  measurementId   Int?
+  measurementProfile Measurement? @relation(fields: [measurementId], references: [id], onDelete: SetNull)
+  fabricProfile   String?
+  status          OrderStatus @default(pending)
+  jobType         String      @default("standard")
+  latitude        Float       @default(0.0)
+  longitude       Float       @default(0.0)
+  price           Float?
+  paymentStatus   String      @default("unpaid")
+  razorpayOrderId String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  review    Review?
+  messages  Message[]
+}
+
+model Measurement {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label     String   @default("My Measurements")
+  chest     Float?
+  waist     Float?
+  hips      Float?
+  inseam    Float?
+  shoulder  Float?
+  sleeve    Float?
+  neck      Float?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders    Order[]
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  tailorId    Int
+  tailor      Tailor   @relation(fields: [tailorId], references: [id], onDelete: Cascade)
+  name        String
+  category    String
+  description String?
+  price       Int
+  stock       Int      @default(0)
+  images      String[]
+  isActive    Boolean  @default(true)
+  isOnSale    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Cart {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tailorId  Int
+  tailor    Tailor   @relation(fields: [tailorId], references: [id], onDelete: Cascade)
+  items     Json
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model ReadymadeOrder {
+  id              Int                  @id @default(autoincrement())
+  userId          Int
+  user            User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tailorId        Int
+  tailor          Tailor               @relation(fields: [tailorId], references: [id], onDelete: Cascade)
+  items           Json
+  total           Int
+  status          ReadymadeOrderStatus @default(placed)
+  deliveryAddress Json
+  paymentId       String?
+  paymentStatus   String               @default("pending")
+  razorpayOrderId String?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  reviews         Review[]
+}
+
+model Review {
+  id               Int      @id @default(autoincrement())
+  orderId          Int?     @unique
+  order            Order?   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  readymadeOrderId Int?
+  readymadeOrder   ReadymadeOrder? @relation(fields: [readymadeOrderId], references: [id], onDelete: Cascade)
+  userId           Int
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tailorId         Int
+  tailor           Tailor   @relation(fields: [tailorId], references: [id], onDelete: Cascade)
+  orderType        String   @default("stitching")
+  rating           Int
+  comment          String?
+  createdAt        DateTime @default(now())
+
+  @@unique([orderType, readymadeOrderId])
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  orderId   Int
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  senderId  Int
+  sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  text      String
+  createdAt DateTime @default(now())
+}
